@@ -50,10 +50,17 @@ services:
     volumes:
       - .:/var/www/html
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - target: 8025
-        published: ${MAILHOG_PUBLISHED_PORT:-8025}
-        protocol: tcp
-        mode: host
+  mailpit:
+      container_name: laravel-app-mailpit
+      image: axllent/mailpit
+      ports:
+          - 8025:8025
+          - 1025:1025
+      volumes:
+          - ./docker/mailpit:/data
+      restart: always
+      environment:
+          MP_MAX_MESSAGES: 5000
+          MP_DATA_FILE: /data/mailpit.db
+          MP_SMTP_AUTH_ACCEPT_ANY: 1
+          MP_SMTP_AUTH_ALLOW_INSECURE: 1
